@@ -13,7 +13,6 @@ class _Notification_ScreenState extends State<Notification_Screen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        
         title: Text(
           "Notification",
           style: TextStyle(
