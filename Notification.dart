@@ -93,6 +93,8 @@ class _Notification_ScreenState extends State<Notification_Screen> {
               },
             );
           } else {
+
+
             return Center(child: Text('No notifications found.'));
           }
         },
