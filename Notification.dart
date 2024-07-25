@@ -11,6 +11,8 @@ class Notification_Screen extends StatefulWidget {
 
 class _Notification_ScreenState extends State<Notification_Screen> {
   late Future<Notificationclass> notification;
+  final Notificationcheck _notificationcheck = Notificationcheck();
+  String? selectedNotificationId;
 
   @override
   void initState() {
@@ -21,6 +23,17 @@ class _Notification_ScreenState extends State<Notification_Screen> {
   Future<Notificationclass> fetchNotification() {
     Notificationapis notificationApis = Notificationapis();
     return notificationApis.fetchNotification(context);
+  }
+
+  Future<void> _fetchNotification(BuildContext context, String id) async {
+    try {
+      await _notificationcheck.fetchNotificationcheck(context, id);
+      setState(() {
+        selectedNotificationId = id;
+      });
+    } catch (e) {
+      print('Failed to fetch notifications: $e');
+    }
   }
 
   @override
@@ -69,11 +82,23 @@ class _Notification_ScreenState extends State<Notification_Screen> {
                   );
                 } else {
                   final notification = notificationData.notifications[index];
-                  print(
-                      'Notification date: ${notification.date}'); // Debug print
+                  print('Notification date: ${notification.date}');
+                  bool isSelected =
+                      selectedNotificationId == notification.id.toString();
+                  Color backgroundColor = isSelected
+                      ? Colors.white
+                      : (notification.isread == 0
+                          ? Colors.grey[300]!
+                          : Colors.white);
+
                   return Column(
                     children: [
                       ListTile(
+                        onTap: () {
+                          _fetchNotification(
+                              context, notification.id.toString());
+                        },
+                        tileColor: backgroundColor,
                         leading: CircleAvatar(
                             backgroundColor: Colors.grey[300],
                             child:
@@ -93,8 +118,6 @@ class _Notification_ScreenState extends State<Notification_Screen> {
               },
             );
           } else {
-
-
             return Center(child: Text('No notifications found.'));
           }
         },
