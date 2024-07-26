@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:nehhdc_app/Model_Screen/APIs_Screen.dart';
 import 'package:nehhdc_app/Setting_Screen/Setting_Screen.dart';
-import 'package:nehhdc_app/Setting_Screen/Static_Verible';
 
 class NotificationView extends StatefulWidget {
-  const NotificationView({Key? key}) : super(key: key);
+  final NotificationDisplayRecord notificationData;
+
+  const NotificationView({Key? key, required this.notificationData})
+      : super(key: key);
 
   @override
   State<NotificationView> createState() => _NotificationViewState();
@@ -29,14 +32,15 @@ class _NotificationViewState extends State<NotificationView> {
         ),
         backgroundColor: Color(ColorVal),
       ),
-      body: const IndexList(),
+      // body: IndexList(notificationData: widget.notificationData),
       backgroundColor: Colors.white,
     );
   }
 }
 
 class IndexList extends StatelessWidget {
-  const IndexList({Key? key}) : super(key: key);
+  final NotificationDisplay notificationData;
+  const IndexList({Key? key, required this.notificationData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,18 +50,18 @@ class IndexList extends StatelessWidget {
         children: [
           _buildInfoTitle(
             context,
-            "State: ",
-            "District: ",
-            "Type: ",
-            "Department: ",
-            "Image: ",
-            "Video: ",
-            "Wrape: ",
-            "count: ",
-            "Weft: ",
-            "Count: ",
-            "Extra Weft: ",
-            "Count: ",
+            "State: ${notificationData.state}",
+            "District: ${notificationData.district}",
+            "Type: ${notificationData.type}",
+            "Department: ${notificationData.department}",
+            "Image: ${notificationData.image}",
+            "Video: ${notificationData.video}",
+            "Wrape: ${'notificationData.wrape'}",
+            "count: ${'notificationData.wrapeCount'}",
+            "Weft: ${"notificationData.weft"}",
+            "Count: ${'notificationData.weftCount'}",
+            "Extra Weft: ${"notificationData.extraWeft"}",
+            "Count: ${"notificationData.extraWeftCount"}",
           ),
         ],
       ),
@@ -98,30 +102,23 @@ class IndexList extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("State : ${staticverible.state}",
-                style: apptextsizemanage.handlinetextstyle()),
+            Text(state, style: apptextsizemanage.handlinetextstyle()),
             const SizedBox(height: 8),
-            Text("District : ${staticverible.distric}",
-                style: apptextsizemanage.handlinetextstyle()),
+            Text(district, style: apptextsizemanage.handlinetextstyle()),
             const SizedBox(height: 4),
-            Text("Type : ${staticverible.type}",
-                style: apptextsizemanage.handlinetextstyle()),
+            Text(type, style: apptextsizemanage.handlinetextstyle()),
             const SizedBox(height: 4),
-            Text("Department : ${staticverible.department}",
-                style: apptextsizemanage.handlinetextstyle()),
+            Text(department, style: apptextsizemanage.handlinetextstyle()),
             const SizedBox(height: 4),
-            Text("$image $image", style: apptextsizemanage.handlinetextstyle()),
+            Text(image, style: apptextsizemanage.handlinetextstyle()),
             const SizedBox(height: 4),
-            Text("$video $video", style: apptextsizemanage.handlinetextstyle()),
+            Text(video, style: apptextsizemanage.handlinetextstyle()),
             const SizedBox(height: 4),
-            Text("$wrape $wrapeCount",
-                style: apptextsizemanage.handlinetextstyle()),
+            Text(wrape, style: apptextsizemanage.handlinetextstyle()),
             const SizedBox(height: 4),
-            Text("$weft $weftCount",
-                style: apptextsizemanage.handlinetextstyle()),
+            Text(weft, style: apptextsizemanage.handlinetextstyle()),
             const SizedBox(height: 4),
-            Text("$extraWeft $extraWeftCount",
-                style: apptextsizemanage.handlinetextstyle()),
+            Text(extraWeft, style: apptextsizemanage.handlinetextstyle()),
           ],
         ),
       ),
