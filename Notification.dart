@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nehhdc_app/Model_Screen/APIs_Screen.dart';
+import 'package:nehhdc_app/Other_Screen/Notification_View.dart';
 import 'package:nehhdc_app/Setting_Screen/Setting_Screen.dart';
 
 class Notification_Screen extends StatefulWidget {
@@ -13,6 +14,9 @@ class _Notification_ScreenState extends State<Notification_Screen> {
   late Future<Notificationclass> notification;
   final Notificationcheck _notificationcheck = Notificationcheck();
   String? selectedNotificationId;
+  final NotificationDisplayService _notificationDisplayService =
+      NotificationDisplayService();
+  String? Notiqrval;
 
   @override
   void initState() {
@@ -31,8 +35,38 @@ class _Notification_ScreenState extends State<Notification_Screen> {
       setState(() {
         selectedNotificationId = id;
       });
+      await fetchNotificationd(context);
     } catch (e) {
       print('Failed to fetch notifications: $e');
+    }
+  }
+
+  Future<void> fetchNotificationd(BuildContext context) async {
+    final qrval = Notiqrval;
+
+    if (qrval == null || qrval.isEmpty) {
+      throw Exception('QR value is null or empty');
+    }
+
+    try {
+      final notificationRecord = await _notificationDisplayService
+          .fetchNotificationDisplay(context, qrval);
+
+      if (notificationRecord != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                NotificationView(notificationData: notificationRecord),
+          ),
+        );
+      } else {
+        throw Exception('Failed to load notifications');
+      }
+    } catch (e) {
+      // Handle any errors
+      print(e.toString());
+      // Optionally show an error message to the user
     }
   }
 
@@ -82,6 +116,7 @@ class _Notification_ScreenState extends State<Notification_Screen> {
                   );
                 } else {
                   final notification = notificationData.notifications[index];
+
                   print('Notification date: ${notification.date}');
                   bool isSelected =
                       selectedNotificationId == notification.id.toString();
@@ -95,6 +130,11 @@ class _Notification_ScreenState extends State<Notification_Screen> {
                     children: [
                       ListTile(
                         onTap: () {
+                          setState(() {
+                            Notiqrval = notification.qrvalue;
+                            print(Notiqrval);
+                          });
+
                           _fetchNotification(
                               context, notification.id.toString());
                         },
