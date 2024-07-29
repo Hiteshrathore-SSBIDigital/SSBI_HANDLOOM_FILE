@@ -16,8 +16,12 @@ class _Notification_ScreenState extends State<Notification_Screen> {
   String? selectedNotificationId;
   final NotificationDisplayService _notificationDisplayService =
       NotificationDisplayService();
+  final feedbackService = FeedbackService();
+  String feedbackview = '';
+  String emoji = '';
+  String comments = '';
+  String? selectedFeedback;
   String? Notiqrval;
-
   @override
   void initState() {
     super.initState();
@@ -52,21 +56,35 @@ class _Notification_ScreenState extends State<Notification_Screen> {
       final notificationRecord = await _notificationDisplayService
           .fetchNotificationDisplay(context, qrval);
 
-      if (notificationRecord != null) {
+      // Assuming feedbackService.sendFeedback returns a map with feedback data
+      Map<String, String> feedbackData =
+          await feedbackService.sendFeedback(context, qrval);
+      final feedbackview = feedbackData['feedback'] ?? 'No feedback available';
+      final emoji = feedbackData['emoji'] ?? '🤔';
+      final comments = feedbackData['comment'] ?? 'No comments available';
+
+      print('Feedback: $feedbackview');
+      print('Emoji: $emoji');
+      print('Comments: $comments');
+
+      if (notificationRecord != null &&
+          notificationRecord.notifications.isNotEmpty) {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                NotificationView(notificationData: notificationRecord),
+            builder: (context) => NotificationView(
+              notificationData: notificationRecord.notifications[0],
+              feedbackview: feedbackview,
+              emoji: emoji,
+              comments: comments,
+            ),
           ),
         );
       } else {
         throw Exception('Failed to load notifications');
       }
     } catch (e) {
-      // Handle any errors
       print(e.toString());
-      // Optionally show an error message to the user
     }
   }
 
