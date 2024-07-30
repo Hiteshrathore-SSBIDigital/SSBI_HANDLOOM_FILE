@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nehhdc_app/Model_Screen/APIs_Screen.dart';
 import 'package:nehhdc_app/Setting_Screen/Setting_Screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NotificationView extends StatefulWidget {
   final NotificationDisplay notificationData;
@@ -183,6 +184,23 @@ class IndexList extends StatelessWidget {
                 _buildTableRow("Video", video),
               ],
             ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (image.isNotEmpty)
+                  ElevatedButton(
+                    onPressed: () => _launchURL('https://www.google.com'),
+                    child: Text('Open Image'),
+                  ),
+                SizedBox(width: 10),
+                if (video.isNotEmpty)
+                  ElevatedButton(
+                    onPressed: () => _launchURL('https://www.google.com'),
+                    child: Text('Open Video'),
+                  ),
+              ],
+            ),
           ],
         ),
       ),
@@ -227,7 +245,7 @@ class IndexList extends StatelessWidget {
           children: [
             Center(
               child: Text(
-                "Product Details",
+                "Product Details or Specification",
                 style: apptextsizemanage.handlinetextstyle1(),
               ),
             ),
@@ -238,25 +256,47 @@ class IndexList extends StatelessWidget {
                 1: FlexColumnWidth(2),
               },
               children: [
-                _buildTableRow("Product Name", productname),
-                _buildTableRow("Weaver Name", wearverName),
-                _buildTableRow("Dimension", dimision),
-                _buildTableRow("Dyeing Status", dyeStatus),
-                _buildTableRow("Nature Dye", nature_dye),
-                _buildTableRow("Type of Weave", WeaveType),
-                _buildTableRow("Type of Yarn", yarntype),
-                _buildTableRow("Wrape", wrape),
-                _buildTableRow("Wrape Count", wrapeCount),
-                _buildTableRow("Weft", weft),
-                _buildTableRow("Weft Count", weftCount),
-                _buildTableRow("Extra Weft", extraWeft),
-                _buildTableRow("Extra Weft Count", extraWeftCount),
+                _buildTableRow(
+                    "Product Name", productname == "ALL" ? "N/A" : productname),
+                _buildTableRow(
+                    "Weaver Name", wearverName == "ALL" ? "N/A" : wearverName),
+                _buildTableRow(
+                    "Dimension", dimision == "ALL" ? "N/A" : dimision),
+                _buildTableRow(
+                    "Dyeing Status", dyeStatus == "ALL" ? "N/A" : dyeStatus),
+                _buildTableRow(
+                    "Nature Dye", nature_dye == "ALL" ? "N/A" : nature_dye),
+                _buildTableRow(
+                    "Type of Weave", WeaveType == "ALL" ? "N/A" : WeaveType),
+                _buildTableRow(
+                    "Type of Yarn", yarntype == "ALL" ? "N/A" : yarntype),
+                _buildTableRow(
+                    "Type of loom", loomtype == "ALL" ? "N/A" : loomtype),
+                _buildTableRow("Yarn Count", ''),
+                _buildTableRow("Wrape", wrape == "ALL" ? "N/A" : wrape),
+                _buildTableRow(
+                    "Wrape Count", wrapeCount == "ALL" ? "N/A" : wrapeCount),
+                _buildTableRow("Weft", weft == "ALL" ? "N/A" : weft),
+                _buildTableRow(
+                    "Weft Count", weftCount == "ALL" ? "N/A" : weftCount),
+                _buildTableRow(
+                    "Extra Weft", extraWeft == "ALL" ? "N/A" : extraWeft),
+                _buildTableRow("Extra Weft Count",
+                    extraWeftCount == "ALL" ? "N/A" : extraWeftCount),
               ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   Widget _buildInfofeedback(
@@ -308,7 +348,8 @@ class IndexList extends StatelessWidget {
                     _buildFeedbackRadio(
                         "Excellent", feedbackview, onFeedbackChanged),
                   ],
-                )
+                ),
+                Divider()
               ],
             ),
             SizedBox(height: 10),
@@ -320,7 +361,7 @@ class IndexList extends StatelessWidget {
               children: [
                 // _buildTablefeedback("Emoji", emoji),
                 // _buildTablefeedback("Feedback", feedback),
-                _buildTablefeedback("Comments", comments),
+                _buildTablecomments(context, "Comments", comments),
               ],
             ),
           ],
@@ -344,11 +385,7 @@ class IndexList extends StatelessWidget {
         Radio<String>(
           groupValue: groupValue,
           value: value,
-          onChanged: (newValue) {
-            if (newValue != null) {
-              onChanged(newValue);
-            }
-          },
+          onChanged: (newValue) {},
           fillColor: MaterialStateProperty.all(_getFeedbackColor(value)),
         ),
       ],
@@ -396,7 +433,7 @@ class IndexList extends StatelessWidget {
           padding: const EdgeInsets.all(5),
           child: Text(
             label,
-            style: apptextsizemanage.handlinetextstyle(),
+            style: apptextsizemanage.handlinetextstyle2(),
           ),
         ),
         Padding(
@@ -410,21 +447,40 @@ class IndexList extends StatelessWidget {
     );
   }
 
-  TableRow _buildTablefeedback(String label, String value) {
+  TableRow _buildTablecomments(
+      BuildContext context, String lable, String value) {
     return TableRow(
       children: [
         Padding(
           padding: const EdgeInsets.all(5),
-          child: Text(
-            label,
-            style: apptextsizemanage.handlinetextstyle(),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(5),
-          child: Text(
-            value,
-            style: apptextsizemanage.handlinetextstyle(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                lable,
+                style: apptextsizemanage.handlinetextstyle2(),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(2),
+                    border: Border.all(
+                      width: 0,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      value,
+                      style: apptextsizemanage.handlinetextstyle(),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
