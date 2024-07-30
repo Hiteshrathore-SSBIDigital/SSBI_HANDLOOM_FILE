@@ -47,7 +47,7 @@ class _Notification_ScreenState extends State<Notification_Screen> {
 
   Future<void> fetchNotificationd(BuildContext context) async {
     final qrval = Notiqrval;
-
+    plaesewaitmassage(context);
     if (qrval == null || qrval.isEmpty) {
       throw Exception('QR value is null or empty');
     }
@@ -69,6 +69,7 @@ class _Notification_ScreenState extends State<Notification_Screen> {
 
       if (notificationRecord != null &&
           notificationRecord.notifications.isNotEmpty) {
+        Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -84,6 +85,7 @@ class _Notification_ScreenState extends State<Notification_Screen> {
         throw Exception('Failed to load notifications');
       }
     } catch (e) {
+      Navigator.of(context).pop();
       print(e.toString());
     }
   }
@@ -134,7 +136,6 @@ class _Notification_ScreenState extends State<Notification_Screen> {
                   );
                 } else {
                   final notification = notificationData.notifications[index];
-
                   print('Notification date: ${notification.date}');
                   bool isSelected =
                       selectedNotificationId == notification.id.toString();
