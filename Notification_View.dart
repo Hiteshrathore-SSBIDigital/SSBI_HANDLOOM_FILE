@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nehhdc_app/Model_Screen/APIs_Screen.dart';
 import 'package:nehhdc_app/Setting_Screen/Setting_Screen.dart';
 import 'package:nehhdc_app/Setting_Screen/Static_Verible';
-import 'package:video_player/video_player.dart'; // Add this import for video handling
-import 'package:url_launcher/url_launcher.dart'; // Ensure you have this import for URL launching
+import 'package:url_launcher/url_launcher.dart';
 
 class NotificationView extends StatefulWidget {
   final NotificationDisplay notificationData;
@@ -47,13 +46,8 @@ class _NotificationViewState extends State<NotificationView> {
           style: apptextsizemanage.Appbartextstyle(),
         ),
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: Color(ColorVal),
       ),
@@ -88,41 +82,71 @@ class IndexList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
       child: Padding(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Column(
           children: [
+            _buildInfoTablestate(
+              context,
+              data: {
+                "State": notificationData.state == "ALL"
+                    ? "N/A"
+                    : notificationData.state,
+                "District": notificationData.district,
+                "City": notificationData.city,
+                "Department": notificationData.department,
+                "Type": notificationData.type,
+                "Image": notificationData.image,
+                "Video": notificationData.video,
+              },
+            ),
+            SizedBox(height: 10),
             _buildInfoTable(
               context,
-              state: notificationData.state,
-              district: notificationData.district,
-              department: notificationData.department,
-              type: notificationData.type,
-              image: notificationData.image,
-              video: notificationData.video,
-              city: notificationData.city,
+              data: {
+                "Product Name": notificationData.productname,
+                "Weaver Name": notificationData.weavername,
+                "Dimension": notificationData.dimision == "ALL"
+                    ? "N/A"
+                    : notificationData.dimision,
+                "Dyeing Status": notificationData.dyeStatus == "ALL"
+                    ? "N/A"
+                    : notificationData.dyeStatus,
+                "Nature Dye": notificationData.nature_dye == "ALL"
+                    ? "N/A"
+                    : notificationData.nature_dye,
+                "Type of Weave": notificationData.WeaveType == "ALL"
+                    ? "N/A"
+                    : notificationData.WeaveType,
+                "Type of Yarn": notificationData.yarntype == "ALL"
+                    ? "N/A"
+                    : notificationData.yarntype,
+                "Type of Loom": notificationData.loomtype == "ALL"
+                    ? "N/A"
+                    : notificationData.loomtype,
+                "Yarn Count": "",
+                "Wrape": notificationData.wrape == "ALL"
+                    ? "N/A"
+                    : notificationData.wrape,
+                "Wrape Count": notificationData.wrapeCount == "ALL"
+                    ? "N/A"
+                    : notificationData.wrapeCount,
+                "Weft": notificationData.weft == "ALL"
+                    ? "N/A"
+                    : notificationData.weft,
+                "Weft Count": notificationData.weftCount == "ALL"
+                    ? "N/A"
+                    : notificationData.weftCount,
+                "Extra Weft": notificationData.extraWeft == "ALL"
+                    ? "N/A"
+                    : notificationData.extraWeft,
+                "Extra Weft Count": notificationData.extraWeftCount == "ALL"
+                    ? "N/A"
+                    : notificationData.extraWeftCount,
+              },
             ),
             SizedBox(height: 10),
-            _buildInfoTable1(
-              context,
-              wearverName: notificationData.weavername,
-              productname: notificationData.productname,
-              loomtype: notificationData.loomtype,
-              wrape: notificationData.wrape,
-              wrapeCount: notificationData.wrapeCount,
-              weft: notificationData.weft,
-              weftCount: notificationData.weftCount,
-              extraWeft: notificationData.extraWeft,
-              extraWeftCount: notificationData.extraWeftCount,
-              dimision: notificationData.dimision,
-              WeaveType: notificationData.WeaveType,
-              dyeStatus: notificationData.dyeStatus,
-              nature_dye: notificationData.nature_dye,
-              yarntype: notificationData.yarntype,
-            ),
-            SizedBox(height: 10),
-            _buildInfofeedback(
+            _buildFeedbackSection(
               context,
               emoji: emoji,
               feedback: feedbackview,
@@ -135,16 +159,8 @@ class IndexList extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoTable(
-    BuildContext context, {
-    required String state,
-    required String district,
-    required String type,
-    required String department,
-    required String image,
-    required String video,
-    required String city,
-  }) {
+  Widget _buildInfoTablestate(BuildContext context,
+      {required Map<String, String> data}) {
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
@@ -176,17 +192,49 @@ class IndexList extends StatelessWidget {
                 0: FixedColumnWidth(130),
                 1: FixedColumnWidth(30),
               },
-              children: [
-                _buildTableRow("State", state),
-                _buildTableRow("District", district),
-                _buildTableRow("City", city),
-                _buildTableRow("Department", department),
-                _buildTableRow("Type", type),
-                _buildTableRow("Image", image.isNotEmpty ? "View Image" : "N/A",
-                    onTap: () => _viewMedia(context, image, isImage: true)),
-                _buildTableRow("Video", video.isNotEmpty ? "Play Video" : "N/A",
-                    onTap: () => _viewMedia(context, video, isImage: false)),
-              ],
+              children: data.entries.map((entry) {
+                return TableRow(
+                  children: [
+                    TableCell(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(
+                          entry.key,
+                          style: apptextsizemanage.handlinetextstyle2(),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(":"),
+                    ),
+                    TableCell(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: entry.key == "Image" || entry.key == "Video"
+                            ? InkWell(
+                                onTap: () {
+                                  if (entry.key == "Image") {
+                                    launchImageURL(entry.value);
+                                  } else if (entry.key == "Video") {
+                                    launchvideosURL(entry.value);
+                                  }
+                                },
+                                child: Text(
+                                  entry.value.isNotEmpty
+                                      ? 'View ${entry.key}'
+                                      : 'No ${entry.key}',
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline),
+                                ),
+                              )
+                            : Text(entry.value),
+                      ),
+                    ),
+                  ],
+                );
+              }).toList(),
             ),
             SizedBox(height: 10),
           ],
@@ -195,23 +243,8 @@ class IndexList extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoTable1(
-    BuildContext context, {
-    required String productname,
-    required String wearverName,
-    required String dimision,
-    required String dyeStatus,
-    required String nature_dye,
-    required String WeaveType,
-    required String yarntype,
-    required String loomtype,
-    required String wrape,
-    required String wrapeCount,
-    required String weft,
-    required String weftCount,
-    required String extraWeft,
-    required String extraWeftCount,
-  }) {
+  Widget _buildInfoTable(BuildContext context,
+      {required Map<String, String> data}) {
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
@@ -233,7 +266,7 @@ class IndexList extends StatelessWidget {
           children: [
             Center(
               child: Text(
-                "Product Details or Specification",
+                "Product Specification",
                 style: apptextsizemanage.handlinetextstyle1(),
               ),
             ),
@@ -243,68 +276,77 @@ class IndexList extends StatelessWidget {
                 0: FixedColumnWidth(130),
                 1: FixedColumnWidth(30),
               },
-              children: [
-                _buildTableRow("Product Name ",
-                    productname == "ALL" ? "N/A" : productname),
-                _buildTableRow(
-                    "Weaver Name", wearverName == "ALL" ? "N/A" : wearverName),
-                _buildTableRow(
-                    "Dimension", dimision == "ALL" ? "N/A" : dimision),
-                _buildTableRow(
-                    "Dyeing Status", dyeStatus == "ALL" ? "N/A" : dyeStatus),
-                _buildTableRow(
-                    "Nature Dye", nature_dye == "ALL" ? "N/A" : nature_dye),
-                _buildTableRow(
-                    "Type of Weave", WeaveType == "ALL" ? "N/A" : WeaveType),
-                _buildTableRow(
-                    "Type of Yarn", yarntype == "ALL" ? "N/A" : yarntype),
-                _buildTableRow(
-                    "Type of loom", loomtype == "ALL" ? "N/A" : loomtype),
-                _buildTableRow("Yarn Count", ''),
-                _buildTableRow("Wrape", wrape == "ALL" ? "N/A" : wrape),
-                _buildTableRow(
-                    "Wrape Count", wrapeCount == "ALL" ? "N/A" : wrapeCount),
-                _buildTableRow("Weft", weft == "ALL" ? "N/A" : weft),
-                _buildTableRow(
-                    "Weft Count", weftCount == "ALL" ? "N/A" : weftCount),
-                _buildTableRow(
-                    "Extra Weft", extraWeft == "ALL" ? "N/A" : extraWeft),
-                _buildTableRow("Extra Weft Count",
-                    extraWeftCount == "ALL" ? "N/A" : extraWeftCount),
-              ],
+              children: data.entries.map((entry) {
+                return TableRow(
+                  children: [
+                    TableCell(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(
+                          entry.key,
+                          style: apptextsizemanage.handlinetextstyle2(),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(":"),
+                    ),
+                    TableCell(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: entry.key == "Image" || entry.key == "Video"
+                            ? InkWell(
+                                onTap: () {
+                                  if (entry.key == "Image") {
+                                    launchImageURL(entry.value);
+                                  } else if (entry.key == "Video") {
+                                    launchvideosURL(entry.value);
+                                  }
+                                },
+                                child: Text(
+                                  entry.value.isNotEmpty
+                                      ? 'View ${entry.key}'
+                                      : 'No ${entry.key}',
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline),
+                                ),
+                              )
+                            : Text(entry.value),
+                      ),
+                    ),
+                  ],
+                );
+              }).toList(),
             ),
+            SizedBox(height: 10),
           ],
         ),
       ),
     );
   }
 
-  void _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  void _viewMedia(BuildContext context, String url,
-      {required bool isImage}) async {
-    final String updateurl = staticverible.temqr + url;
-
-    print('Attempting to launch URL: $updateurl'); // Debug print
+  void launchImageURL(String imageUrl) async {
+    String url = staticverible.temqr + '/' + imageUrl;
 
     try {
-      if (await canLaunch(updateurl)) {
-        await launch(updateurl);
-      } else {
-        print('Could not launch URL: $updateurl'); // Debug print
-      }
+      await launch(url);
     } catch (e) {
-      print('Exception: $e'); // Debug print
+      throw 'Could not launch $url: $e';
     }
   }
 
-  Widget _buildInfofeedback(
+  void launchvideosURL(String videosUrl) async {
+    String url = staticverible.temqr + '/' + videosUrl;
+    try {
+      await launch(url);
+    } catch (e) {
+      throw 'Could not launch $url: $e';
+    }
+  }
+
+  Widget _buildFeedbackSection(
     BuildContext context, {
     required String emoji,
     required String feedback,
@@ -332,31 +374,21 @@ class IndexList extends StatelessWidget {
           children: [
             Center(
               child: Text(
-                "Feed Back",
+                "Feedback",
                 style: apptextsizemanage.handlinetextstyle1(),
               ),
             ),
             Divider(),
-            Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildFeedbackRadio(
-                        "Good", feedbackview, onFeedbackChanged),
-                    _buildFeedbackRadio(
-                        "Poor", feedbackview, onFeedbackChanged),
-                    _buildFeedbackRadio(
-                        "Very Poor", feedbackview, onFeedbackChanged),
-                    _buildFeedbackRadio(
-                        "Okay", feedbackview, onFeedbackChanged),
-                    _buildFeedbackRadio(
-                        "Excellent", feedbackview, onFeedbackChanged),
-                  ],
+                ...["Good", "Poor", "Very Poor", "Okay", "Excellent"].map(
+                  (value) => _buildFeedbackRadio(
+                      context, value, feedback, onFeedbackChanged),
                 ),
-                Divider()
               ],
             ),
+            Divider(),
             SizedBox(height: 10),
             Table(
               columnWidths: {
@@ -364,9 +396,8 @@ class IndexList extends StatelessWidget {
                 1: FlexColumnWidth(2),
               },
               children: [
-                // _buildTablefeedback("Emoji", emoji),
-                // _buildTablefeedback("Feedback", feedback),
-                _buildTablecomments(context, "Comments", comments),
+                //     _buildTableRow("Comments", comments),
+                _buildTablecomments(context, "Comments :"),
               ],
             ),
           ],
@@ -376,25 +407,21 @@ class IndexList extends StatelessWidget {
   }
 
   Widget _buildFeedbackRadio(
-      String value, String groupValue, Function(String) onChanged) {
+    BuildContext context,
+    String value,
+    String groupValue,
+    Function(String) onChanged,
+  ) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text(
-          _getFeedbackEmoji(value),
-        ),
-        Text(
-          value,
-        ),
+        Text(_getFeedbackEmoji(value)),
+        Text(value),
         SizedBox(width: 8),
         Radio<String>(
           groupValue: groupValue,
           value: value,
-          onChanged: (newValue) {
-            if (newValue != null) {
-              onChanged(newValue);
-            }
-          },
+          onChanged: (newValue) {},
           fillColor: MaterialStateProperty.all(_getFeedbackColor(value)),
         ),
       ],
@@ -419,60 +446,14 @@ class IndexList extends StatelessWidget {
   }
 
   Color _getFeedbackColor(String feedback) {
-    switch (feedback) {
-      case "Good":
-        return Color(ColorVal);
-      case "Poor":
-        return Color(ColorVal);
-      case "Very Poor":
-        return Color(ColorVal);
-      case "Okay":
-        return Color(ColorVal);
-      case "Excellent":
-        return Color(ColorVal);
-      default:
-        return Color(ColorVal);
-    }
+    return Color(ColorVal); // Customize colors as needed
   }
 
-  TableRow _buildTableRow(String label, String value,
-      {void Function()? onTap}) {
+  TableRow _buildTablecomments(BuildContext context, String label) {
     return TableRow(
       children: [
         Padding(
-          padding: const EdgeInsets.all(5),
-          child: Text(
-            '$label',
-            style: apptextsizemanage.handlinetextstyle2(),
-          ),
-        ),
-        Text(
-          ':',
-          style: apptextsizemanage.handlinetextstyle2(),
-        ),
-        Expanded(
-          child: InkWell(
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.all(5),
-              child: Text(
-                value,
-                style: apptextsizemanage.handlinetextstyle(),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  TableRow _buildTablecomments(
-      BuildContext context, String label, String value) {
-    return TableRow(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(5),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -480,23 +461,22 @@ class IndexList extends StatelessWidget {
                 label,
                 style: apptextsizemanage.handlinetextstyle2(),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(2),
-                    border: Border.all(
-                      width: 0,
-                      color: Colors.grey,
-                    ),
+              SizedBox(height: 8),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(
+                    width: 1,
+                    color: Colors.grey,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Text(
-                      value,
-                      style: apptextsizemanage.handlinetextstyle(),
-                    ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    comments,
+                    style: apptextsizemanage.handlinetextstyle(),
+                    overflow: TextOverflow.visible, // Ensure text is visible
                   ),
                 ),
               ),
@@ -505,90 +485,5 @@ class IndexList extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class ImageViewer extends StatelessWidget {
-  final String url;
-
-  const ImageViewer({Key? key, required this.url}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        height: 100,
-        child: Column(
-          children: [
-            Expanded(
-              child: Image.network(
-                url,
-                fit: BoxFit.contain,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class VideoViewer extends StatefulWidget {
-  final String url;
-
-  const VideoViewer({Key? key, required this.url}) : super(key: key);
-
-  @override
-  _VideoViewerState createState() => _VideoViewerState();
-}
-
-class _VideoViewerState extends State<VideoViewer> {
-  late VideoPlayerController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = VideoPlayerController.network(widget.url)
-      ..initialize().then((_) {
-        setState(() {});
-      });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Video Viewer'),
-        backgroundColor: Color(ColorVal),
-      ),
-      body: Center(
-        child: _controller.value.isInitialized
-            ? AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
-              )
-            : CircularProgressIndicator(),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            if (_controller.value.isPlaying) {
-              _controller.pause();
-            } else {
-              _controller.play();
-            }
-          });
-        },
-        child: Icon(
-          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-        ),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 }
