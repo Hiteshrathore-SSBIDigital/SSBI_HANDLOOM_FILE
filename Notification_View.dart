@@ -10,6 +10,9 @@ class NotificationView extends StatefulWidget {
   final String emoji;
   final String comments;
 
+
+
+
   const NotificationView({
     Key? key,
     required this.notificationData,
