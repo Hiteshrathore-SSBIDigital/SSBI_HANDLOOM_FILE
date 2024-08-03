@@ -9,17 +9,16 @@ class NotificationView extends StatefulWidget {
   final String feedbackview;
   final String emoji;
   final String comments;
+  final String selectheader;
 
-
-
-
-  const NotificationView({
-    Key? key,
-    required this.notificationData,
-    required this.feedbackview,
-    required this.emoji,
-    required this.comments,
-  }) : super(key: key);
+  const NotificationView(
+      {Key? key,
+      required this.notificationData,
+      required this.feedbackview,
+      required this.emoji,
+      required this.comments,
+      required this.selectheader})
+      : super(key: key);
 
   @override
   State<NotificationView> createState() => _NotificationViewState();
@@ -45,7 +44,7 @@ class _NotificationViewState extends State<NotificationView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Notification View",
+          widget.selectheader,
           style: apptextsizemanage.Appbartextstyle(),
         ),
         leading: IconButton(
@@ -203,7 +202,7 @@ class IndexList extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 8),
                         child: Text(
                           entry.key,
-                          style: apptextsizemanage.handlinetextstyle2(),
+                          style: apptextsizemanage.handlinetextstyle(),
                         ),
                       ),
                     ),
@@ -479,7 +478,7 @@ class IndexList extends StatelessWidget {
                   child: Text(
                     comments,
                     style: apptextsizemanage.handlinetextstyle(),
-                    overflow: TextOverflow.visible, // Ensure text is visible
+                    overflow: TextOverflow.visible,
                   ),
                 ),
               ),
