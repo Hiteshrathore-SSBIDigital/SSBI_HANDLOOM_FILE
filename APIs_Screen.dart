@@ -1595,7 +1595,6 @@ class FeedbackService {
         body: jsonEncode(requestBody),
       );
 
-      // Debug log to ensure response is received
       print('Response Status Code: ${response.statusCode}');
       print('Response Body: ${response.body}');
 
@@ -1793,14 +1792,39 @@ class Notificationapis {
         },
         body: jsonEncode(requestBody),
       );
+
       print('Response body: ${response.body}');
+
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         final String dataString = responseData['d'];
-        final List<dynamic> jsonList = jsonDecode(dataString);
-        int notinumber = jsonList.length;
-        print('Number of notifications: $notinumber');
-        return Notificationclass.fromJson({'notifications': jsonList});
+
+        // Decode dataString as a Map<String, dynamic>
+        final dynamic dataMap = jsonDecode(dataString);
+
+        // Check if dataMap contains an error message
+        if (dataMap is Map<String, dynamic> && dataMap.containsKey('message')) {
+          // Handle error case
+          print('Error message from API: ${dataMap['message']}');
+          return Notificationclass.fromJson({'notifications': []});
+        } else if (dataMap is List<dynamic>) {
+          // Handle success case
+          final List<dynamic> jsonList = dataMap;
+
+          if (jsonList.isEmpty) {
+            // Handle no feedback case
+            print('No feedback available.');
+            return Notificationclass.fromJson({'notifications': []});
+          } else {
+            // Parse notifications from the list
+            int notinumber = jsonList.length;
+            print('Number of notifications: $notinumber');
+            return Notificationclass.fromJson({'notifications': jsonList});
+          }
+        } else {
+          // Handle unexpected data format
+          throw Exception('Unexpected data format received from API.');
+        }
       } else {
         throw Exception(
             'Failed to load notification, status code: ${response.statusCode}');
@@ -1931,6 +1955,20 @@ class NotificationDisplay {
   final String image;
   final String video;
   final String city;
+  final String productname;
+  final String weavername;
+  final String dimision;
+  final String dyeStatus;
+  final String nature_dye;
+  final String WeaveType;
+  final String yarntype;
+  final String loomtype;
+  final String wrape;
+  final String wrapeCount;
+  final String weft;
+  final String weftCount;
+  final String extraWeft;
+  final String extraWeftCount;
 
   NotificationDisplay({
     required this.state,
@@ -1941,6 +1979,20 @@ class NotificationDisplay {
     required this.image,
     required this.video,
     required this.city,
+    required this.productname,
+    required this.weavername,
+    required this.dimision,
+    required this.dyeStatus,
+    required this.nature_dye,
+    required this.WeaveType,
+    required this.yarntype,
+    required this.loomtype,
+    required this.wrape,
+    required this.wrapeCount,
+    required this.weft,
+    required this.weftCount,
+    required this.extraWeft,
+    required this.extraWeftCount,
   });
 
   factory NotificationDisplay.fromJson(Map<String, dynamic> json) {
@@ -1953,6 +2005,20 @@ class NotificationDisplay {
       image: json["image"] ?? "",
       video: json["video"] ?? "",
       city: json["city"] ?? "",
+      productname: json["productname"] ?? "",
+      weavername: json["weavername"] ?? "",
+      dimision: json["dimension"] ?? "N/A",
+      WeaveType: json["weavetype"] ?? "N/A",
+      dyeStatus: json["dyestatus"] ?? "N/A",
+      nature_dye: json["nature_dye"] ?? "N/A",
+      yarntype: json["yarntype"] ?? "N/A",
+      wrape: json["wrape"] ?? "N/A",
+      wrapeCount: json["wrapecount"] ?? "N/A",
+      weft: json["weft"] ?? "N/A",
+      weftCount: json["weftcount"] ?? "N/A",
+      extraWeft: json["extraweft"] ?? "N/A",
+      extraWeftCount: json["extraWeftcount"] ?? "N/A",
+      loomtype: json["loomtype"] ?? "N/A",
     );
   }
 }
@@ -1987,12 +2053,32 @@ class NotificationDisplayService {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        final String dataString = responseData['d'];
-        final List<dynamic> jsonList = jsonDecode(dataString);
-        print(jsonList);
-        return NotificationDisplayRecord.fromJson({'notifications': jsonList});
+        if (responseData.containsKey('d')) {
+          final dynamic data = responseData['d'];
+          if (data is String && data.contains('No Data Found')) {
+            print('No data found for the given QR value.');
+            QuickAlert.show(
+                context: context,
+                title: "",
+                type: QuickAlertType.error,
+                text: data,
+                onConfirmBtnTap: () {
+                  Navigator.of(context).pop();
+                });
+            return null;
+          } else {
+            // Handle valid JSON response
+            final List<dynamic> jsonList = jsonDecode(data);
+            print(jsonList);
+            return NotificationDisplayRecord.fromJson(
+                {'notifications': jsonList});
+          }
+        } else {
+          print('Key "d" not found in response data');
+          return null;
+        }
       } else {
-        print('Failed to load notifications');
+        print('Failed to load notifications: ${response.statusCode}');
         return null;
       }
     } catch (e) {
