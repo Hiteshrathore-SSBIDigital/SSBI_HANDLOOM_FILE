@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:nehhdc_app/Model_Screen/APIs_Screen.dart';
 import 'package:nehhdc_app/Setting_Screen/Setting_Screen.dart';
 import 'package:nehhdc_app/Setting_Screen/Static_Verible';
@@ -91,13 +92,13 @@ class IndexList extends StatelessWidget {
             _buildInfoTablestate(
               context,
               data: {
-                "State": notificationData.state == "ALL"
+                "State".tr: notificationData.state == "ALL"
                     ? "N/A"
                     : notificationData.state,
-                "District": notificationData.district,
-                "City": notificationData.city,
-                "Department": notificationData.department,
-                "Type": notificationData.type,
+                "Districts".tr: notificationData.district,
+                "City".tr: notificationData.city,
+                "Department".tr: notificationData.department,
+                "Type".tr: notificationData.type,
                 "Image": notificationData.image,
                 "Video": notificationData.video,
               },
@@ -106,43 +107,43 @@ class IndexList extends StatelessWidget {
             _buildInfoTable(
               context,
               data: {
-                "Product Name": notificationData.productname,
-                "Weaver Name": notificationData.weavername,
-                "Dimension": notificationData.dimision == "ALL"
+                "Product Name".tr: notificationData.productname,
+                "Weaver Name".tr: notificationData.weavername,
+                "Dimension".tr: notificationData.dimision == "ALL"
                     ? "N/A"
                     : notificationData.dimision,
-                "Dyeing Status": notificationData.dyeStatus == "ALL"
+                "Dyeing Status".tr: notificationData.dyeStatus == "ALL"
                     ? "N/A"
                     : notificationData.dyeStatus,
-                "Nature Dye": notificationData.nature_dye == "ALL"
+                "Nature of Dye".tr: notificationData.nature_dye == "ALL"
                     ? "N/A"
                     : notificationData.nature_dye,
-                "Type of Weave": notificationData.WeaveType == "ALL"
+                "Type of Weave".tr: notificationData.WeaveType == "ALL"
                     ? "N/A"
                     : notificationData.WeaveType,
-                "Type of Yarn": notificationData.yarntype == "ALL"
+                "Type of Yarn".tr: notificationData.yarntype == "ALL"
                     ? "N/A"
                     : notificationData.yarntype,
-                "Type of Loom": notificationData.loomtype == "ALL"
+                "Type of Loom".tr: notificationData.loomtype == "ALL"
                     ? "N/A"
                     : notificationData.loomtype,
-                "Yarn Count": "",
-                "Wrape": notificationData.wrape == "ALL"
+                "Yarn Count".tr: "",
+                "Wrape".tr: notificationData.wrape == "ALL"
                     ? "N/A"
                     : notificationData.wrape,
-                "Wrape Count": notificationData.wrapeCount == "ALL"
+                "Wrape Count".tr: notificationData.wrapeCount == "ALL"
                     ? "N/A"
                     : notificationData.wrapeCount,
-                "Weft": notificationData.weft == "ALL"
+                "Weft".tr: notificationData.weft == "ALL"
                     ? "N/A"
                     : notificationData.weft,
-                "Weft Count": notificationData.weftCount == "ALL"
+                "Weft Count".tr: notificationData.weftCount == "ALL"
                     ? "N/A"
                     : notificationData.weftCount,
-                "Extra Weft": notificationData.extraWeft == "ALL"
+                "Extra Weft".tr: notificationData.extraWeft == "ALL"
                     ? "N/A"
                     : notificationData.extraWeft,
-                "Extra Weft Count": notificationData.extraWeftCount == "ALL"
+                "Extra Weft Count".tr: notificationData.extraWeftCount == "ALL"
                     ? "N/A"
                     : notificationData.extraWeftCount,
               },
@@ -202,7 +203,7 @@ class IndexList extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 8),
                         child: Text(
                           entry.key,
-                          style: apptextsizemanage.handlinetextstyle(),
+                          style: apptextsizemanage.handlinetextstyle2(),
                         ),
                       ),
                     ),
@@ -477,7 +478,7 @@ class IndexList extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     comments,
-                    style: apptextsizemanage.handlinetextstyle(),
+                    style: apptextsizemanage.handltextdefult(),
                     overflow: TextOverflow.visible,
                   ),
                 ),
@@ -489,5 +490,3 @@ class IndexList extends StatelessWidget {
     );
   }
 }
-
-
