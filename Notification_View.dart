@@ -5,6 +5,8 @@ import 'package:nehhdc_app/Setting_Screen/Setting_Screen.dart';
 import 'package:nehhdc_app/Setting_Screen/Static_Verible';
 import 'package:url_launcher/url_launcher.dart';
 
+
+
 class NotificationView extends StatefulWidget {
   final NotificationDisplay notificationData;
   final String feedbackview;
