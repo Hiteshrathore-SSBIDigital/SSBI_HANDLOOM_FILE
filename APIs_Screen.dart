@@ -1,12 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-
-
-
-
-
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:nehhdc_app/Screen/Add_Product.dart';
