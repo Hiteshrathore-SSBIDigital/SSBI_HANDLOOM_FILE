@@ -9,6 +9,8 @@ class DeviceList extends StatefulWidget {
   _DeviceListState createState() => _DeviceListState();
 }
 
+
+
 class _DeviceListState extends State<DeviceList> {
   List<ScanResult> devicesList = [];
   bool isScanning = false;
