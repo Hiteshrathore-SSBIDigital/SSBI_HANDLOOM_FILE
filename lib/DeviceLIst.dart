@@ -24,10 +24,6 @@ class _DeviceListState extends State<DeviceList> {
     super.initState();
     _checkBluetoothStatus();
 
-
-
-
-
     FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) {
       setState(() {
         isBluetoothOn = state == BluetoothAdapterState.on;
